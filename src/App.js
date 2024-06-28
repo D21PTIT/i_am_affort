@@ -1,23 +1,40 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import SongDetail from './components/Content/SongDetail';
+import SongList from './components/Content/SongList';
+import CreateSong from './components/Content/CreateSong';
 import './App.css';
+import SongEdit from './components/Content/SongEdit';
 
 function App() {
+  const [songs, setSongs] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch('http://localhost:8080/song')
+      .then(response => response.json())
+      .then(data => setSongs(data))
+      .catch(error => console.error('Error fetching songs:', error));
+  }, []);
+
+  const handleCreateClick = () => {
+    navigate('/create');
+  };
+
+  const handleDelete = (id) => {
+    setSongs(prevSongs => prevSongs.filter(song => song._id !== id));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Song List</h1>
+      <button onClick={handleCreateClick}>Create</button>
+      <Routes>
+        <Route path="/" element={<SongList songs={songs} onDelete={handleDelete} />} />
+        <Route path="/song/:id" element={<SongDetail songs={songs} />} />
+        <Route path="/create" element={<CreateSong />} />
+        <Route path="/songedit/:id" element={<SongEdit />} />
+      </Routes>
     </div>
   );
 }
