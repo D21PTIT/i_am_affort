@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-function SongEdit({ songs, updateSong }) {
+function SongEdit({ songs, setOk }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const song = songs.find(song => song._id === id);
@@ -41,14 +41,15 @@ function SongEdit({ songs, updateSong }) {
             });
             if (response.ok) {
                 const updatedSong = await response.json();
-                updateSong(id, updatedSong);
-                navigate('/songs');
+                setOk(2);
+                navigate('/');
             } else {
                 console.error('Failed to update the song');
             }
         } catch (error) {
             console.error('Error:', error);
         }
+
     };
 
     if (!song) {
