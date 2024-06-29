@@ -33,7 +33,7 @@ function App() {
         <Route path="/" element={<SongList songs={songs} onDelete={handleDelete} />} />
         <Route path="/song/:id" element={<SongDetail songs={songs} />} />
         <Route path="/create" element={<CreateSong />} />
-        <Route path="/songedit/:id" element={<SongEdit />} />
+        <Route path="/songedit/:id" element={<SongEdit songs={songs}/>} />
       </Routes>
     </div>
   );

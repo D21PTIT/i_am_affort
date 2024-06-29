@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreateSong = () => {
+  const nav = useNavigate()
   const [formData, setFormData] = useState({
     TenBaiHat: '',
     CaSi: '',
@@ -43,6 +45,9 @@ const CreateSong = () => {
       console.error('Error:', error);
     }
   };
+  const handleCancel =()=>{
+    nav('/');
+  }
 
   return (
     <div>
@@ -65,6 +70,7 @@ const CreateSong = () => {
           <input type="text" name="LuotXem" value={formData.LuotXem} onChange={handleChange} />
         </div>
         <button type="submit">Submit</button>
+        <button onClick={() => handleCancel()}>Cancel</button>
       </form>
     </div>
   );
