@@ -4,6 +4,7 @@ import { Switch } from "antd";
 import axios from "axios";
 
 function Page1() {
+  const [data, setData] = useState([]);
   const [switches, setSwitches] = useState({
     1: JSON.parse(localStorage.getItem("device-1")) || false,
     2: JSON.parse(localStorage.getItem("device-2")) || false,
@@ -51,10 +52,40 @@ function Page1() {
 
     fetchDevices();
   };
+  useEffect(() => {
+    // Hàm lấy dữ liệu người dùng từ API
+    const fetchDevices = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/iot/getAllData"
+        );
+        const data = response.data;
+        setData(data.data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+
+    fetchDevices();
+  }, []);
 
   return (
     <div className="page1-container">
-      <div className="zone zone1">Zone 1</div>
+      <div className="zone zone1">
+        <div>
+          <p>Do Am</p>
+          <p>{data[0]?.humidity}</p>
+        </div>
+        <div>
+          <p>Anh Sang</p>
+          <p>{data[0]?.light}</p>
+        </div>
+
+        <div>
+          <p>Nhiet Do</p>
+          <p>{data[0]?.temperature}</p>
+        </div>
+      </div>
       <div className="zone zone2">Zone 2</div>
       <div className="zone zone3">
         <div>

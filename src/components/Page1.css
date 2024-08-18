@@ -8,19 +8,40 @@
     border: none; /* Loại bỏ viền nếu không cần thiết */
   }
   
-  .zone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-  }
+ 
   
   .zone1 {
-    background-color: #f5f5f5;
     grid-area: 1 / 1 / 2 / 3; 
   }
   
+  .zone {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+  }
+  
+  .zone1 > div {
+    text-align: center;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    height: 150px;
+  }
+  
+  .zone1 > div p:first-child {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .zone1 > div p:last-child {
+    font-size: 1.2em;
+    color: #333333;
+  }
   .zone2 {
     background-color: #d3d3d3;
     grid-area: 2 / 1 / 4 / 3; 

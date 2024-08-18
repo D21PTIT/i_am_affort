@@ -1,8 +1,11 @@
 import { Table } from "antd";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
 function Page2(props) {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const columns = [
     {
       title: "Độ ẩm",
@@ -26,9 +29,26 @@ function Page2(props) {
       title: "Thoi diem",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => <a>{text}</a>,
+      render: (text) => new Date(text).toLocaleString(),
     },
   ];
+
+  useEffect(() => {
+    // Hàm lấy dữ liệu người dùng từ API
+    const fetchDevices = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/iot/getAllData"
+        );
+        const data = response.data;
+        setData(data.data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+
+    fetchDevices();
+  }, []);
   return (
     <div>
       <h2>Du lieu thuc</h2>
