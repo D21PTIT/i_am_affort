@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import Page1 from './components/Page1';
 import Page2 from './components/Page2';
 import Page3 from './components/Page3';
@@ -8,11 +8,6 @@ import Profile from './components/Profile';
 
 const { Header, Content, Footer } = Layout;
 
-// Sample components for each route
-const Home = () => <div>Home Content</div>;
-const Static1 = () => <div>Static 1 Content</div>;
-const Static2 = () => <div>Static 2 Content</div>;
-const Contact = () => <div>Contact Content</div>;
 
 const App = () => {
   return (
