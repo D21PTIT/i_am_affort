@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Page1.css";
 import { Switch } from "antd";
 import axios from "axios";
+import LineChart from "./Test";
 
 function Page1() {
   const [data, setData] = useState([]);
@@ -86,7 +87,9 @@ function Page1() {
           <p>{data[0]?.temperature}</p>
         </div>
       </div>
-      <div className="zone zone2">Zone 2</div>
+      <div className="zone zone2">
+        <LineChart></LineChart>
+      </div>
       <div className="zone zone3">
         <div>
           <div>

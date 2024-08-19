@@ -4,7 +4,8 @@ import { Route, Routes, Link } from 'react-router-dom';
 import Page1 from './components/Page1';
 import Page2 from './components/Page2';
 import Page3 from './components/Page3';
-import Profile from './components/Profile';
+// import Profile from './components/Profile';
+import LineChart from './components/Test';
 
 const { Header, Content, Footer } = Layout;
 
@@ -35,7 +36,7 @@ const App = () => {
               <Route path="/" element={<Page1></Page1>} />
               <Route path="/static1" element={<Page2 />} />
               <Route path="/static2" element={<Page3 />} />
-              <Route path="/contact" element={<Profile />} />
+              <Route path="/contact" element={<LineChart></LineChart>} />
             </Routes>
           </div>
         </Content>
