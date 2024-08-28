@@ -6,6 +6,8 @@ import Page2 from './components/Page2';
 import Page3 from './components/Page3';
 // import Profile from './components/Profile';
 import LineChart from './components/Test';
+import Profile from './components/Profile';
+import Contact from './components/Contact';
 
 const { Header, Content, Footer } = Layout;
 
@@ -20,10 +22,10 @@ const App = () => {
               <Link to="/">Trang Chủ</Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link to="/static1">Static 1</Link>
+              <Link to="/static1">Data table 1</Link>
             </Menu.Item>
             <Menu.Item key="3">
-              <Link to="/static2">Static 2</Link>
+              <Link to="/static2">Data table 2</Link>
             </Menu.Item>
             <Menu.Item key="4">
               <Link to="/contact">Contact</Link>
@@ -36,7 +38,7 @@ const App = () => {
               <Route path="/" element={<Page1></Page1>} />
               <Route path="/static1" element={<Page2 />} />
               <Route path="/static2" element={<Page3 />} />
-              <Route path="/contact" element={<LineChart></LineChart>} />
+              <Route path="/contact" element={<Contact></Contact>} />
             </Routes>
           </div>
         </Content>

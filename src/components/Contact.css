@@ -1,0 +1,62 @@
+.contact-card {
+    width: 80vw;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 30px 20px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    position: relative;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: -60px;
+    border: 5px solid #fff;
+  }
+  
+  .about-me {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .about-me h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .about-me p {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .social-links {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .social-links h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .social-links a {
+    font-size: 16px;
+    color: #1DA1F2;
+    text-decoration: none;
+  }
+  
+  .social-links a:hover {
+    color: #0d8bce;
+  }
+  
