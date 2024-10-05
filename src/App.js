@@ -22,7 +22,7 @@ const App = () => {
               <Link to="/">Trang Chủ</Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link to="/static1">Data table 10</Link>
+              <Link to="/static1">Data table 1</Link>
             </Menu.Item>
             <Menu.Item key="3">
               <Link to="/static2">Data table 2</Link>
