@@ -9,6 +9,7 @@ import LineChart from './components/Test';
 import Profile from './components/Profile';
 import Contact from './components/Contact';
 import SupperKien from './components/SupperKien';
+import MegaKien from './components/MegaKien';
 
 const { Header, Content, Footer } = Layout;
 
@@ -38,7 +39,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Page1></Page1>} />
               <Route path="/static1" element={<Page2 />} />
-              <Route path="/static2" element={<Page3 />} />
+              <Route path="/static2" element={<MegaKien></MegaKien>} />
               <Route path="/contact" element={<SupperKien></SupperKien>} />
             </Routes>
           </div>

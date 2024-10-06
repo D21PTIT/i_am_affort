@@ -15,7 +15,7 @@ function SupperKien(props) {
     const fetchDevices = async () => {
         setLoading(true); // Hiển thị hiệu ứng quay quay trước khi gọi API
         try {
-            const response = await axios.get("http://localhost:8080/kien/iot", {
+            const response = await axios.get("http://localhost:8080/kien/iot1", {
                 params: {
                     page: currentPage,
                     type: selectedTag, // Lọc theo tag được chọn
@@ -116,6 +116,7 @@ function SupperKien(props) {
                     rowKey="_id" // Sử dụng _id làm key cho mỗi hàng
                 />
                 <Pagination
+                    Pagination align="end"
                     current={currentPage}
                     total={totalRecords} // Tổng số bản ghi từ state
                     showSizeChanger // Hiển thị bộ chọn số lượng mục hiển thị trên mỗi trang
