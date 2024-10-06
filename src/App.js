@@ -10,6 +10,8 @@ import Profile from './components/Profile';
 import Contact from './components/Contact';
 import SupperKien from './components/SupperKien';
 import MegaKien from './components/MegaKien';
+import Legendary from './components/Legendary';
+
 
 const { Header, Content, Footer } = Layout;
 
@@ -37,7 +39,7 @@ const App = () => {
         <Content style={{ margin: '0 16px' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <Routes>
-              <Route path="/" element={<Page1></Page1>} />
+              <Route path="/" element={<Legendary></Legendary>} />
               <Route path="/static1" element={<Page2 />} />
               <Route path="/static2" element={<MegaKien></MegaKien>} />
               <Route path="/contact" element={<SupperKien></SupperKien>} />
