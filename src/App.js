@@ -11,6 +11,8 @@ import Contact from './components/Contact';
 import SupperKien from './components/SupperKien';
 import MegaKien from './components/MegaKien';
 import Legendary from './components/Legendary';
+import RealTime from './components/RealTime';
+import Graph from './components/Graph';
 
 
 const { Header, Content, Footer } = Layout;
@@ -34,6 +36,12 @@ const App = () => {
             <Menu.Item key="4">
               <Link to="/contact">Contact</Link>
             </Menu.Item>
+            <Menu.Item key="5">
+              <Link to="/Test">Test</Link>
+            </Menu.Item>
+            <Menu.Item key="6">
+              <Link to="/dp">DP</Link>
+            </Menu.Item>
           </Menu>
         </Header>
         <Content style={{ margin: '0 16px' }}>
@@ -43,6 +51,8 @@ const App = () => {
               <Route path="/static1" element={<Page2 />} />
               <Route path="/static2" element={<MegaKien></MegaKien>} />
               <Route path="/contact" element={<SupperKien></SupperKien>} />
+              <Route path="/Test" element={<RealTime></RealTime>} />
+              <Route path="/dp" element={<Graph></Graph>} />
             </Routes>
           </div>
         </Content>
