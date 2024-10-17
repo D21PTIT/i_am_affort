@@ -1,5 +1,7 @@
-import { Switch } from 'antd';
+import { Switch, Spin } from 'antd';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import "../Style/lightpub.css";
 
 function Legendary(props) {
     // Hàm để lấy trạng thái lưu trữ từ localStorage hoặc giá trị mặc định
@@ -9,6 +11,7 @@ function Legendary(props) {
     };
 
     const [switchStates, setSwitchStates] = useState(getInitialSwitchStates);
+    const [loading, setLoading] = useState({ switch1: false, switch2: false, switch3: false });
 
     // Mỗi khi trạng thái của switch thay đổi, lưu lại vào localStorage
     useEffect(() => {
@@ -17,57 +20,76 @@ function Legendary(props) {
 
     const callAPI = async (switchKey, bodyValue) => {
         try {
-            const response = await fetch('http://localhost:8080/test/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    topic: "home/led",
-                    message: `${switchKey} ${bodyValue}` // Tạo message dạng "x y"
-                }),
+            const response = await axios.post('http://localhost:8080/test/send', {
+                topic: "home/led",
+                message: `${switchKey} ${bodyValue}` // Tạo message dạng "x y"
             });
-            const result = await response.json();
-            console.log('API response:', result);
+            console.log('API response:', response.data);
+            return response.data;
         } catch (error) {
             console.error('Error calling API:', error);
+            throw error;
         }
     };
 
-    const handleToggle = (switchKey) => () => {
-        setSwitchStates((prevState) => {
-            const newValue = prevState[switchKey] === 0 ? 1 : 0;
-            callAPI(switchKey.replace('switch', ''), newValue); // Truyền số thứ tự nút và giá trị mới
-            return {
+    const handleToggle = (switchKey) => async () => {
+        setLoading((prevLoading) => ({
+            ...prevLoading,
+            [switchKey]: true
+        }));
+
+        const newValue = switchStates[switchKey] === 0 ? 1 : 0;
+
+        try {
+            // Gọi API và chờ phản hồi
+            const apiResponse = await callAPI(switchKey.replace('switch', ''), newValue);
+            
+            // Nếu API phản hồi với trạng thái mới, bạn có thể kiểm tra và sử dụng nó để cập nhật trạng thái
+            // Giả sử apiResponse chứa trạng thái mới (nếu không thì sử dụng newValue như hiện tại)
+            setSwitchStates((prevState) => ({
                 ...prevState,
-                [switchKey]: newValue
-            };
-        });
+                [switchKey]: newValue  // Hoặc apiResponse.newValue nếu API phản hồi
+            }));
+        } catch (error) {
+            console.error('API call failed');
+        } finally {
+            // Tắt trạng thái pending (loading)
+            setLoading((prevLoading) => ({
+                ...prevLoading,
+                [switchKey]: false
+            }));
+        }
     };
 
     return (
         <div>
-            <h1>OK</h1>
+            <h1>OK123</h1>
             <div>
                 <p>Switch 1 (Body: {switchStates.switch1})</p>
-                <Switch 
-                    checked={switchStates.switch1 === 1} // Kiểm tra trạng thái hiện tại
-                    onChange={handleToggle('switch1')} 
-                />
+                <Spin spinning={loading.switch1}>
+                    <Switch
+                        checked={switchStates.switch1 === 1} // Kiểm tra trạng thái hiện tại
+                        onChange={handleToggle('switch1')}
+                    />
+                </Spin>
             </div>
             <div>
                 <p>Switch 2 (Body: {switchStates.switch2})</p>
-                <Switch 
-                    checked={switchStates.switch2 === 1} // Kiểm tra trạng thái hiện tại
-                    onChange={handleToggle('switch2')} 
-                />
+                <Spin spinning={loading.switch2}>
+                    <Switch
+                        checked={switchStates.switch2 === 1} // Kiểm tra trạng thái hiện tại
+                        onChange={handleToggle('switch2')}
+                    />
+                </Spin>
             </div>
             <div>
                 <p>Switch 3 (Body: {switchStates.switch3})</p>
-                <Switch 
-                    checked={switchStates.switch3 === 1} // Kiểm tra trạng thái hiện tại
-                    onChange={handleToggle('switch3')} 
-                />
+                <Spin spinning={loading.switch3}>
+                    <Switch
+                        checked={switchStates.switch3 === 1} // Kiểm tra trạng thái hiện tại
+                        onChange={handleToggle('switch3')}
+                    />
+                </Spin>
             </div>
         </div>
     );

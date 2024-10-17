@@ -1,0 +1,92 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #e0e0e0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .light-bulb {
+    position: relative;
+    width: 120px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .bulb {
+    width: 80px;
+    height: 100px;
+    background-color: black; /* Màu bóng đèn khi tắt */
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+  }
+  
+  .light-bulb.on .bulb {
+    background-color: yellow; /* Màu bóng đèn khi bật */
+  }
+  
+  /* Đế bóng đèn */
+  .base {
+    width: 60px;
+    height: 20px;
+    background-color: gray;
+    border-radius: 10px;
+    margin-top: -10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .rays {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    display: none;
+  }
+  
+  .rays span {
+    position: absolute;
+    width: 10px;
+    height: 30px;
+    background-color: yellow;
+    border-radius: 5px;
+  }
+  
+  .rays span:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+  .rays span:nth-child(2) { top: 14%; right: 14%; transform: rotate(45deg); }
+  .rays span:nth-child(3) { right: 0; top: 50%; transform: translateY(-50%); }
+  .rays span:nth-child(4) { bottom: 14%; right: 14%; transform: rotate(45deg); }
+  .rays span:nth-child(5) { bottom: 0; left: 50%; transform: translateX(-50%); }
+  .rays span:nth-child(6) { bottom: 14%; left: 14%; transform: rotate(45deg); }
+  .rays span:nth-child(7) { left: 0; top: 50%; transform: translateY(-50%); }
+  .rays span:nth-child(8) { top: 14%; left: 14%; transform: rotate(45deg); }
+  
+  .light-bulb.on .rays {
+    display: block;
+  }
+  
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

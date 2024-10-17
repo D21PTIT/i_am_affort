@@ -7,7 +7,6 @@ const socket = io('http://localhost:8080');  // Kết nối tới server Backend
 
 function SensorChart() {
   const [data, setData] = useState([]);
-
   useEffect(() => {
     // Lắng nghe sự kiện 'sensorData' từ Backend qua Socket.IO
     socket.on('sensorData', (newData) => {
@@ -17,7 +16,7 @@ function SensorChart() {
           time: new Date().toLocaleTimeString(),
           temperature: newData.temperature,
           humidity: newData.humidity,
-          brightness: newData.light ,  // Chia độ sáng cho 10
+          brightness: newData.light , 
         },
       ].slice(-15)); // Giữ lại 15 giá trị gần nhất
     });
