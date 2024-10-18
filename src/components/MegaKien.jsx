@@ -1,4 +1,4 @@
-import { Pagination, Spin, Table, DatePicker } from 'antd';
+import { Pagination, Spin, Table, DatePicker, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Thêm axios để gọi API
 
@@ -11,6 +11,7 @@ function MegaKien(props) {
     const [loading, setLoading] = useState(false); // Trạng thái loading
     const [data, setData] = useState([]); // Dữ liệu API trả về
     const [dateRange, setDateRange] = useState([null, null]); // Lưu trữ giá trị start và end
+    const [exactTime, setExactTime] = useState(''); // Lưu giá trị exactTime nhập vào
     const [sortState, setSortState] = useState({
         timesort: null, // Sắp xếp thời gian (1 hoặc -1)
         tempsort: 0, // Sắp xếp nhiệt độ (-1, 0, 1)
@@ -19,7 +20,7 @@ function MegaKien(props) {
     });
 
     // Hàm gọi API
-    const fetchData = async (page, size, start, end, sort) => {
+    const fetchData = async (page, size, start, end, exactTime, sort) => {
         setLoading(true); // Bật loading
 
         // daysort là true nếu cả start và end đều có giá trị, false nếu không
@@ -33,6 +34,7 @@ function MegaKien(props) {
                     start: start, // Gửi start date
                     end: end, // Gửi end date
                     daysort: daysort, // Gửi daysort
+                    exactTime: exactTime || null, // Gửi exactTime (nếu có giá trị)
                     ...sort // Gửi giá trị sắp xếp: timesort, tempsort, humsort, brisort
                 }
             });
@@ -46,7 +48,7 @@ function MegaKien(props) {
         }
     };
 
-    // Gọi API mỗi khi currentPage, pageSize, dateRange, hoặc sortState thay đổi
+    // Gọi API mỗi khi currentPage, pageSize, dateRange, exactTime, hoặc sortState thay đổi
     useEffect(() => {
         const [start, end] = dateRange;
         fetchData(
@@ -54,9 +56,10 @@ function MegaKien(props) {
             pageSize,
             start ? start.format('YYYY-MM-DD') : null,
             end ? end.format('YYYY-MM-DD') : null,
+            exactTime,
             sortState
         );
-    }, [currentPage, pageSize, dateRange, sortState]);
+    }, [currentPage, pageSize, dateRange, exactTime, sortState]);
 
     const handlePageChange = (page, size) => {
         setCurrentPage(page); // Cập nhật trang hiện tại
@@ -66,6 +69,11 @@ function MegaKien(props) {
     // Xử lý khi người dùng chọn khoảng thời gian
     const handleDateRangeChange = (dates) => {
         setDateRange(dates); // Cập nhật giá trị start và end
+    };
+
+    // Xử lý khi người dùng nhập exactTime
+    const handleExactTimeChange = (e) => {
+        setExactTime(e.target.value); // Cập nhật giá trị exactTime nhập vào
     };
 
     // Xử lý sự kiện sắp xếp cột
@@ -128,6 +136,14 @@ function MegaKien(props) {
         <div>
             {/* Thêm RangePicker để chọn khoảng thời gian */}
             <RangePicker onChange={handleDateRangeChange} />
+
+            {/* Thêm ô nhập cho exactTime */}
+            <Input
+                placeholder="Enter exact time (YYYY/MM/DD HH:mm:ss)"
+                value={exactTime}
+                onChange={handleExactTimeChange} // Xử lý khi người dùng nhập exactTime
+                style={{ width: '100%', margin: '10px 0' }}
+            />
 
             <Spin spinning={loading}>
                 {/* Hiển thị bảng dữ liệu từ API */}

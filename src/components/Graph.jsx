@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import 'bootstrap/dist/css/bootstrap.min.css';  // Import Bootstrap
 
-const socket = io('http://localhost:8080');  // Kết nối tới server Backend
+const socket = io('http://localhost:8080/1');  // Kết nối tới server Backend
 
 function SensorChart() {
   const [data, setData] = useState([]);
