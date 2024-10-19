@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import useSocketData from '../IOT/useSocketData';
 
-const socket = io('http://localhost:8080/1'); // Địa chỉ của BE
+// Initialize the sockets
+const socket = io('http://localhost:8080/1'); // Socket for sensor data
+const socket2 = io('http://localhost:8080/2'); // Socket for warning data
 
 function RealTime() {
   const [sensorData, setSensorData] = useState({
@@ -11,17 +14,35 @@ function RealTime() {
     timestamp: null
   });
 
+
+  const [warning, setWarning] = useState(false); // State to manage warning
+
   useEffect(() => {
-    // Lắng nghe sự kiện 'sensorData' từ BE
+    // Listen to sensorData events from socket 1
     socket.on('sensorData', (data) => {
       setSensorData(data);
+      console.log(data);
     });
 
-    // Cleanup khi component bị hủy
+    // Listen to events from socket 2
+    socket2.on('warning', (data) => {
+      console.log(data.messageValue);
+      if (data.messageValue === 1) {
+        setWarning(true); // Set warning to true if data is 1
+      } else {
+        setWarning(false); // Reset if data is not 1
+      }
+    });
+    
+    
+
+    // Cleanup when component is unmounted
     return () => {
       socket.off('sensorData');
+      socket2.off('alert');
     };
   }, []);
+
 
   return (
     <div>
@@ -32,6 +53,31 @@ function RealTime() {
         <h2>Brightness: {sensorData.light ? `${sensorData.light}` : 'Loading...'}</h2>
         <h3>Last Updated: {sensorData.timestamp ? new Date(sensorData.timestamp).toLocaleTimeString() : 'Loading...'}</h3>
       </div>
+
+      {/* Flashing warning if warning is true */}
+      {warning && (
+        <div style={{
+          backgroundColor: 'red',
+          color: 'white',
+          padding: '10px',
+          marginTop: '20px',
+          textAlign: 'center',
+          animation: 'flash 1s infinite'
+        }}>
+          Warning: Sensor Alert!
+        </div>
+      )}
+
+      {/* Add CSS for flashing effect */}
+      <style>
+        {`
+          @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+          }
+        `}
+      </style>
     </div>
   );
 }

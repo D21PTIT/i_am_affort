@@ -1,26 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Route, Routes, Link } from 'react-router-dom';
 import Page1 from './components/Page1';
 import Page2 from './components/Page2';
 import Page3 from './components/Page3';
-// import Profile from './components/Profile';
-import LineChart from './components/Test';
-import Profile from './components/Profile';
-import Contact from './components/Contact';
 import SupperKien from './components/SupperKien';
 import MegaKien from './components/MegaKien';
 import Legendary from './components/Legendary';
 import RealTime from './components/RealTime';
-import Graph from './components/Graph';
-
+import Dashboard from './IOT/DashBoard';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ColorModeContext, useMode } from './IOT/theme';
 
 const { Header, Content, Footer } = Layout;
 
-
 const App = () => {
+  const [theme, colorMode] = useMode();
+
   return (
-    
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Layout style={{ minHeight: '100vh' }}>
         <Header style={{ background: '#fff', padding: 0 }}>
           <Menu theme="light" mode="horizontal" defaultSelectedKeys={['1']}>
@@ -44,23 +43,24 @@ const App = () => {
             </Menu.Item>
           </Menu>
         </Header>
-        <Content style={{ margin: '0 16px' }}>
+
+        <Content style={{ margin: '16px' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <Routes>
-              <Route path="/" element={<Legendary></Legendary>} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/static1" element={<Page2 />} />
-              <Route path="/static2" element={<MegaKien></MegaKien>} />
-              <Route path="/contact" element={<SupperKien></SupperKien>} />
-              <Route path="/Test" element={<RealTime></RealTime>} />
-              <Route path="/dp" element={<Graph></Graph>} />
+              <Route path="/static2" element={<MegaKien />} />
+              <Route path="/contact" element={<SupperKien />} />
+              <Route path="/Test" element={<RealTime />} />
+              <Route path="/dp" element={<Legendary />} />
             </Routes>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©2024 Created by Ant UED
-        </Footer>
+        
+
+        <Footer style={{ textAlign: 'center' }}>Ant Design ©2024 Created by Ant UED</Footer>
       </Layout>
-    
+    </ThemeProvider>
   );
 };
 

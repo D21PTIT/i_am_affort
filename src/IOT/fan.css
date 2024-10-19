@@ -1,0 +1,13 @@
+@keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .rotating {
+    animation: rotate 2s linear infinite; /* Quay với thời gian 2s, lặp lại vô hạn */
+  }
+  

@@ -1,6 +1,6 @@
 import { Switch, Spin } from 'antd';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
 import "../Style/lightpub.css";
 
 function Legendary(props) {
