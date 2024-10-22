@@ -95,8 +95,8 @@ function MegaKien(props) {
     const columns = [
         {
             title: 'ID',
-            dataIndex: '_id',
-            key: '_id',
+            dataIndex: 'stt',
+            key: 'stt',
             align: 'center', // Căn giữa
         },
         {

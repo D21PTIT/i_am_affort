@@ -98,8 +98,8 @@ function EpicKien(props) {  // Changed from MegaKien to EpicKien
     const columns = [
         {
             title: 'ID',
-            dataIndex: '_id',
-            key: '_id',
+            dataIndex: 'stt',
+            key: 'stt',
             align: 'center', // Căn giữa
         },
         {

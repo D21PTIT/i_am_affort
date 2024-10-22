@@ -9,7 +9,7 @@ function SupperKien(props) {
     const [totalRecords, setTotalRecords] = useState(0); // Tổng số bản ghi từ API
     const [loading, setLoading] = useState(false); // Trạng thái loading
     const [selectedTag, setSelectedTag] = useState("all"); // State cho tag
-    const [timesort, setTimesort] = useState(true); // Mặc định sắp xếp giảm dần (mới nhất trước)
+    const [timesort, setTimesort] = useState(false); // Mặc định sắp xếp tăng dần (cũ nhất trước)
 
     // Hàm gọi API
     const fetchDevices = async () => {
@@ -37,7 +37,6 @@ function SupperKien(props) {
     // Gọi lại API mỗi khi pageSize, currentPage, selectedTag, hoặc timesort thay đổi
     useEffect(() => {
         fetchDevices();
-        console.log(timesort);
     }, [pageSize, currentPage, selectedTag, timesort]);
 
     // Xử lý khi thay đổi số lượng item trên mỗi trang hoặc trang hiện tại
@@ -62,23 +61,27 @@ function SupperKien(props) {
     const columns = [
         {
             title: 'ID',
-            dataIndex: '_id',
-            key: '_id',
+            dataIndex: 'stt',
+            key: 'stt',
+            align: 'center', // Căn giữa cột
         },
         {
             title: 'Tag',
             dataIndex: 'tag',
             key: 'tag',
+            align: 'center', // Căn giữa cột
         },
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            align: 'center', // Căn giữa cột
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            align: 'center', // Căn giữa cột
         },
         {
             title: 'Created At',
@@ -89,6 +92,7 @@ function SupperKien(props) {
             onHeaderCell: () => ({
                 onClick: handleSortChange, // Xử lý khi người dùng nhấn vào tiêu đề cột
             }),
+            align: 'center', // Căn giữa cột
         },
     ];
 
