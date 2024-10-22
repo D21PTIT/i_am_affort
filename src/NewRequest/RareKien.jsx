@@ -1,37 +1,58 @@
-import { Box,  IconButton, Typography, useTheme } from "@mui/material";
-import { tokens } from "./theme";
-import LineChart from "./LineChart";
-import StatBox from "./StatBox";
+import { Box, Typography, useTheme } from "@mui/material";
+import { tokens } from "../IOT/theme";
+import LineChart from "../IOT/LineChart";
+import StatBox from "../IOT/StatBox";
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import Box1 from "./Box1";
-const Dashboard = () => {
+import AirIcon from '@mui/icons-material/Air'; // New icon for wind data
+import Box1 from "../IOT/Box1";
+import './NewStyle.css';
+import FinalChart from "./FinalChart";
+
+const RareKien = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [sensorData, setSensorData] = useState({
     temperature: null,
     humidity: null,
     light: null,
+    wind: null,
   });
+
+  const [windWarning, setWindWarning] = useState(false);  // Track warning state for wind
+
   useEffect(() => {
-    const socket = io('http://localhost:8080/1');
-  
-    socket.on('sensorData', (data) => {
+    const socket1 = io('http://localhost:8080/1');  // Data for sensor readings
+    const socket2 = io('http://localhost:8080/2');  // Data for warnings
+
+    // Listen for sensor data on socket1
+    socket1.on('sensorData', (data) => {
       setSensorData({
         temperature: data.temperature,
         humidity: data.humidity,
         light: data.light,
+        wind: data.wind,
       });
     });
-  
+
+    // Listen for warnings on socket2
+    socket2.on('warning', (warningData) => {
+      if (warningData.messageValue === 1) {
+        setWindWarning(true);  // Start blinking
+      } else if (warningData.messageValue === 0) {
+        setWindWarning(false);  // Stop blinking
+      }
+    });
+
+    // Cleanup: disconnect both sockets when the component unmounts
     return () => {
-      socket.disconnect();
+      socket1.disconnect();
+      socket2.disconnect();
     };
   }, []);
-  
 
   const getTemperatureStatus = (temperature) => {
     if (temperature <= 10) {
@@ -70,12 +91,19 @@ const Dashboard = () => {
       return "Rất sáng";
     }
   };
-  
-  
+
+  const getWindStatus = (wind) => {
+    if (wind <= 5) {
+      return "Yếu";
+    } else if (wind > 5 && wind <= 15) {
+      return "Trung bình";
+    } else {
+      return "Mạnh";
+    }
+  };
+
   return (
     <Box m="20px">
-      
-
       {/* GRID & CHARTS */}
       <Box
         display="grid"
@@ -94,7 +122,7 @@ const Dashboard = () => {
           <StatBox
             title={sensorData.temperature !== null ? `${sensorData.temperature}°C` : "N/A"}
             subtitle="Nhiệt độ"
-            progress={sensorData.temperature/60}
+            progress={sensorData.temperature / 60}
             increase={sensorData.temperature !== null ? getTemperatureStatus(sensorData.temperature) : "N/A"}
             icon={
               <DeviceThermostatIcon
@@ -103,6 +131,7 @@ const Dashboard = () => {
             }
           />
         </Box>
+
         <Box
           gridColumn="span 3"
           backgroundColor={colors.primary[400]}
@@ -113,7 +142,7 @@ const Dashboard = () => {
           <StatBox
             title={sensorData.humidity !== null ? `${sensorData.humidity}%` : "N/A"}
             subtitle="Độ ẩm"
-            progress={sensorData.humidity/100}
+            progress={sensorData.humidity / 100}
             increase={sensorData.humidity !== null ? getHumidityStatus(sensorData.humidity) : "N/A"}
             icon={
               <OpacityIcon
@@ -122,6 +151,7 @@ const Dashboard = () => {
             }
           />
         </Box>
+
         <Box
           gridColumn="span 3"
           backgroundColor={colors.primary[400]}
@@ -132,7 +162,7 @@ const Dashboard = () => {
           <StatBox
             title={sensorData.light !== null ? `${sensorData.light} lx` : "N/A"}
             subtitle="Ánh sáng"
-            progress={sensorData.light/3000}
+            progress={sensorData.light / 3000}
             increase={sensorData.light !== null ? getLightStatus(sensorData.light) : "N/A"}
             icon={
               <LightModeIcon
@@ -141,7 +171,30 @@ const Dashboard = () => {
             }
           />
         </Box>
-        
+
+        {/* New Wind Data Box */}
+        <Box
+          gridColumn="span 3"
+          backgroundColor={windWarning ? 'transparent' : colors.primary[400]}  // Hiệu ứng nhấp nháy với màu đỏ khi cảnh báo kích hoạt
+          className={windWarning ? 'blinking' : ''}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ "--primary-color": colors.primary[400] }}  // Truyền màu primary vào CSS
+        >
+          <StatBox
+            title={sensorData.wind !== null ? `${sensorData.wind} m/s` : "N/A"}
+            subtitle="Sức gió"
+            progress={sensorData.wind / 100}  // Giả sử tốc độ gió tối đa là 100 m/s cho progress
+            increase={sensorData.wind !== null ? getWindStatus(sensorData.wind) : "N/A"}
+            icon={
+              <AirIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+
 
         {/* ROW 2 */}
         <Box
@@ -164,28 +217,24 @@ const Dashboard = () => {
               >
                 Đồ thị
               </Typography>
-              
             </Box>
           </Box>
           <Box height="250px" m="-20px 0 0 0">
-            <LineChart isDashboard={true} />
+            <FinalChart isDashboard={true} />
           </Box>
         </Box>
 
-        
         <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
         >
-        <Box1></Box1>
-
+          <Box1 />
         </Box>
-        
       </Box>
     </Box>
   );
 };
 
-export default Dashboard;
+export default RareKien;

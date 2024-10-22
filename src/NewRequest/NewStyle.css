@@ -1,0 +1,19 @@
+.blinking {
+    animation: blinking 1s infinite;
+  }
+  
+  @keyframes blinking {
+    0% {
+      background-color: red;
+      opacity: 1;
+    }
+    50% {
+      background-color: var(--primary-color); /* Sử dụng biến màu để thay đổi */
+      opacity: 1;
+    }
+    100% {
+      background-color: red;
+      opacity: 1;
+    }
+  }
+  

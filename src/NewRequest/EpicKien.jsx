@@ -5,7 +5,7 @@ import axios from 'axios'; // Thêm axios để gọi API
 const { RangePicker } = DatePicker;
 const { Option } = Select; // Thêm Option cho Select
 
-function MegaKien(props) {
+function EpicKien(props) {  // Changed from MegaKien to EpicKien
     const [pageSize, setPageSize] = useState(10); // Số lượng item trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalRecords, setTotalRecords] = useState(0); // Tổng số bản ghi
@@ -19,6 +19,7 @@ function MegaKien(props) {
         tempsort: 0, // Sắp xếp nhiệt độ (-1, 0, 1)
         humsort: 0, // Sắp xếp độ ẩm (-1, 0, 1)
         brisort: 0, // Sắp xếp ánh sáng (-1, 0, 1)
+        windsort: 0, // Sắp xếp sức gió (-1, 0, 1) - Added for Wind Speed sorting
     });
 
     // Hàm gọi API
@@ -26,14 +27,14 @@ function MegaKien(props) {
         setLoading(true); // Bật loading
 
         try {
-            const response = await axios.get('http://localhost:8080/kien/iot2', {
+            const response = await axios.get('http://localhost:8080/kien/iot3', {
                 params: {
                     page: page, // Gửi page
                     quanty: size, // Gửi pageSize
                     exactTime: exactTime || null, // Gửi exactTime (nếu có giá trị)
                     type: type === 'ALL' ? null : type, // Gửi loại cảm biến, bỏ qua nếu chọn ALL
                     exactValue: exactValue || null, // Gửi giá trị chính xác
-                    ...sort // Gửi giá trị sắp xếp: timesort, tempsort, humsort, brisort
+                    ...sort // Gửi giá trị sắp xếp: timesort, tempsort, humsort, brisort, windsort - Included windsort
                 }
             });
             // Giả sử API trả về dạng: { totalRecords, data }
@@ -76,7 +77,7 @@ function MegaKien(props) {
 
     // Xử lý sự kiện sắp xếp cột
     const handleTableChange = (pagination, filters, sorter) => {
-        let newSortState = { timesort: 0, tempsort: 0, humsort: 0, brisort: 0 };
+        let newSortState = { timesort: 0, tempsort: 0, humsort: 0, brisort: 0, windsort: 0 };
 
         if (sorter.columnKey === 'createdAt') {
             newSortState.timesort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
@@ -86,6 +87,8 @@ function MegaKien(props) {
             newSortState.humsort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
         } else if (sorter.columnKey === 'light') {
             newSortState.brisort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
+        } else if (sorter.columnKey === 'windSpeed') {
+            newSortState.windsort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0; // Added windSpeed sorting
         }
 
         setSortState(newSortState); // Cập nhật trạng thái sắp xếp
@@ -100,28 +103,35 @@ function MegaKien(props) {
             align: 'center', // Căn giữa
         },
         {
-            title: 'Humidity',
+            title: 'Độ ẩm',
             dataIndex: 'humidity',
             key: 'humidity',
             align: 'center', // Căn giữa
             sorter: true, // Cho phép sắp xếp
         },
         {
-            title: 'Light',
+            title: 'Ánh sáng',
             dataIndex: 'light',
             key: 'light',
             align: 'center', // Căn giữa
             sorter: true, // Cho phép sắp xếp
         },
         {
-            title: 'Temperature',
+            title: 'Nhiệt độ',
             dataIndex: 'temperature',
             key: 'temperature',
             align: 'center', // Căn giữa
             sorter: true, // Cho phép sắp xếp
         },
         {
-            title: 'Created At',
+            title: 'Tốc độ gió', // New column for wind speed
+            dataIndex: 'wind',
+            key: 'wind',
+            align: 'center', // Căn giữa
+            sorter: true, // Cho phép sắp xếp
+        },
+        {
+            title: 'Thời gian ghi nhận',
             dataIndex: 'createdAt',
             key: 'createdAt',
             align: 'center', // Căn giữa
@@ -154,6 +164,7 @@ function MegaKien(props) {
                         <Option value="Humidity">Độ ẩm</Option>
                         <Option value="Light">Ánh sáng</Option>
                         <Option value="Temperature">Nhiệt độ</Option>
+                        <Option value="WindSpeed">Sức gió</Option> {/* Added Wind Speed as option */}
                     </Select>
                 </Col>
                 <Col span={12}>
@@ -193,4 +204,4 @@ function MegaKien(props) {
     );
 }
 
-export default MegaKien;
+export default EpicKien; // Changed component name to EpicKien

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Layout, Menu } from 'antd';
 import { Route, Routes, Link } from 'react-router-dom';
-import Page1 from './components/Page1';
-import Page2 from './components/Page2';
-import Page3 from './components/Page3';
+
 import SupperKien from './components/SupperKien';
 import MegaKien from './components/MegaKien';
 import Legendary from './components/Legendary';
 import RealTime from './components/RealTime';
 import Dashboard from './IOT/DashBoard';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-import { ColorModeContext, useMode } from './IOT/theme';
+import {  useMode } from './IOT/theme';
+import EpicKien from './NewRequest/EpicKien';
+import RareKien from './NewRequest/RareKien';
 
 const { Header, Content, Footer } = Layout;
 
@@ -48,11 +48,11 @@ const App = () => {
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/static1" element={<Page2 />} />
+              <Route path="/static1" element={<EpicKien/>} />
               <Route path="/static2" element={<MegaKien />} />
               <Route path="/contact" element={<SupperKien />} />
               <Route path="/Test" element={<RealTime />} />
-              <Route path="/dp" element={<Legendary />} />
+              <Route path="/dp" element={<RareKien />} />
             </Routes>
           </div>
         </Content>

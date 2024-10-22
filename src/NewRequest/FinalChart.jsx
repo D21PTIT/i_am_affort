@@ -1,11 +1,10 @@
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 
-import { mockLineData as data } from "./mockData";
-import { tokens } from "./theme";
-import useSocketData from "./useSocketData";
+import { tokens } from "../IOT/theme";
+import useSocketData from "./DataGraph";
 
-const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
+const FinalChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const data2 = useSocketData();
@@ -117,4 +116,4 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   );
 };
 
-export default LineChart;
+export default FinalChart ;
