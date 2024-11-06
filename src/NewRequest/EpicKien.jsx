@@ -1,207 +1,200 @@
 import { Pagination, Spin, Table, DatePicker, Input, Select, Row, Col } from 'antd';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Thêm axios để gọi API
+import axios from 'axios';
 
-const { RangePicker } = DatePicker;
-const { Option } = Select; // Thêm Option cho Select
+const { Option } = Select;
 
-function EpicKien(props) {  // Changed from MegaKien to EpicKien
-    const [pageSize, setPageSize] = useState(10); // Số lượng item trên mỗi trang
-    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-    const [totalRecords, setTotalRecords] = useState(0); // Tổng số bản ghi
-    const [loading, setLoading] = useState(false); // Trạng thái loading
-    const [data, setData] = useState([]); // Dữ liệu API trả về
-    const [exactTime, setExactTime] = useState(''); // Lưu giá trị exactTime nhập vào
-    const [type, setType] = useState('ALL'); // Loại cảm biến
-    const [exactValue, setExactValue] = useState(''); // Giá trị chính xác
+function EpicKien(props) {
+    const [pageSize, setPageSize] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+    const [exactTime, setExactTime] = useState('');
+    const [type, setType] = useState('ALL');
+    const [exactValue, setExactValue] = useState('');
     const [sortState, setSortState] = useState({
-        timesort: null, // Sắp xếp thời gian (1 hoặc -1)
-        tempsort: 0, // Sắp xếp nhiệt độ (-1, 0, 1)
-        humsort: 0, // Sắp xếp độ ẩm (-1, 0, 1)
-        brisort: 0, // Sắp xếp ánh sáng (-1, 0, 1)
-        windsort: 0, // Sắp xếp sức gió (-1, 0, 1) - Added for Wind Speed sorting
+        timesort: null, // Sắp xếp theo thời gian (1 hoặc -1)
+        tag: null, // Trường sắp xếp (1: Humidity, 2: Light, 3: Temperature, 4: Wind)
+        order: null, // Thứ tự sắp xếp (-1 hoặc 1)
     });
 
     // Hàm gọi API
     const fetchData = async (page, size, exactTime, sort, type, exactValue) => {
-        setLoading(true); // Bật loading
+        setLoading(true);
 
         try {
             const response = await axios.get('http://localhost:8080/kien/iot3', {
                 params: {
-                    page: page, // Gửi page
-                    quanty: size, // Gửi pageSize
-                    exactTime: exactTime || null, // Gửi exactTime (nếu có giá trị)
-                    type: type === 'ALL' ? null : type, // Gửi loại cảm biến, bỏ qua nếu chọn ALL
-                    exactValue: exactValue || null, // Gửi giá trị chính xác
-                    ...sort // Gửi giá trị sắp xếp: timesort, tempsort, humsort, brisort, windsort - Included windsort
+                    page,
+                    quanty: size,
+                    exactTime: exactTime || null,
+                    type: type === 'ALL' ? null : type,
+                    exactValue: exactValue || null,
+                    timesort: sort.timesort || null,
+                    tag: sort.tag || null,
+                    order: sort.order || null
                 }
             });
-            // Giả sử API trả về dạng: { totalRecords, data }
-            setTotalRecords(response.data.totalRecords); // Cập nhật tổng số bản ghi
-            setData(response.data.data); // Cập nhật dữ liệu
+
+            setTotalRecords(response.data.totalRecords);
+            setData(response.data.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
-            setLoading(false); // Tắt loading
+            setLoading(false);
         }
     };
 
-    // Gọi API mỗi khi currentPage, pageSize, exactTime, sortState, type, hoặc exactValue thay đổi
     useEffect(() => {
         fetchData(currentPage, pageSize, exactTime, sortState, type, exactValue);
     }, [currentPage, pageSize, exactTime, sortState, type, exactValue]);
 
     const handlePageChange = (page, size) => {
-        setCurrentPage(page); // Cập nhật trang hiện tại
-        setPageSize(size); // Cập nhật số lượng item trên mỗi trang
+        setCurrentPage(page);
+        setPageSize(size);
     };
 
-    // Xử lý khi người dùng nhập exactTime
     const handleExactTimeChange = (e) => {
-        setExactTime(e.target.value); // Cập nhật giá trị exactTime nhập vào
+        setExactTime(e.target.value);
     };
 
-    // Xử lý khi chọn loại cảm biến
     const handleTypeChange = (value) => {
-        setType(value); // Cập nhật loại cảm biến
+        setType(value);
         if (value === 'ALL') {
-            setExactValue(''); // Xóa giá trị exactValue nếu chọn ALL
+            setExactValue('');
         }
     };
 
-    // Xử lý khi nhập giá trị chính xác
     const handleExactValueChange = (e) => {
-        setExactValue(e.target.value); // Cập nhật giá trị chính xác
+        setExactValue(e.target.value);
     };
 
-    // Xử lý sự kiện sắp xếp cột
     const handleTableChange = (pagination, filters, sorter) => {
-        let newSortState = { timesort: 0, tempsort: 0, humsort: 0, brisort: 0, windsort: 0 };
+        let newSortState = { timesort: null, tag: null, order: null };
 
         if (sorter.columnKey === 'createdAt') {
-            newSortState.timesort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
-        } else if (sorter.columnKey === 'temperature') {
-            newSortState.tempsort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
-        } else if (sorter.columnKey === 'humidity') {
-            newSortState.humsort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
-        } else if (sorter.columnKey === 'light') {
-            newSortState.brisort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0;
-        } else if (sorter.columnKey === 'windSpeed') {
-            newSortState.windsort = sorter.order === 'ascend' ? 1 : sorter.order === 'descend' ? -1 : 0; // Added windSpeed sorting
+            newSortState.timesort = sorter.order === 'ascend' ? 1 : -1;
+        } else {
+            newSortState.timesort = null;
+            if (sorter.columnKey === 'humidity') {
+                newSortState.tag = 1;
+            } else if (sorter.columnKey === 'light') {
+                newSortState.tag = 2;
+            } else if (sorter.columnKey === 'temperature') {
+                newSortState.tag = 3;
+            } else if (sorter.columnKey === 'wind') {
+                newSortState.tag = 4;
+            }
+            newSortState.order = sorter.order === 'ascend' ? 1 : -1;
         }
 
-        setSortState(newSortState); // Cập nhật trạng thái sắp xếp
+        setSortState(newSortState);
     };
 
-    // Định nghĩa cột cho bảng và căn giữa nội dung
     const columns = [
         {
             title: 'ID',
             dataIndex: 'stt',
             key: 'stt',
-            align: 'center', // Căn giữa
+            align: 'center',
+            width: 80,
         },
         {
             title: 'Độ ẩm',
             dataIndex: 'humidity',
             key: 'humidity',
-            align: 'center', // Căn giữa
-            sorter: true, // Cho phép sắp xếp
+            align: 'center',
+            sorter: true,
         },
         {
             title: 'Ánh sáng',
             dataIndex: 'light',
             key: 'light',
-            align: 'center', // Căn giữa
-            sorter: true, // Cho phép sắp xếp
+            align: 'center',
+            sorter: true,
         },
         {
             title: 'Nhiệt độ',
             dataIndex: 'temperature',
             key: 'temperature',
-            align: 'center', // Căn giữa
-            sorter: true, // Cho phép sắp xếp
+            align: 'center',
+            sorter: true,
         },
         {
-            title: 'Tốc độ gió', // New column for wind speed
+            title: 'Tốc độ gió',
             dataIndex: 'wind',
             key: 'wind',
-            align: 'center', // Căn giữa
-            sorter: true, // Cho phép sắp xếp
+            align: 'center',
+            sorter: true,
         },
         {
             title: 'Thời gian ghi nhận',
             dataIndex: 'createdAt',
             key: 'createdAt',
-            align: 'center', // Căn giữa
-            sorter: true, // Cho phép sắp xếp
-            render: (text) => new Date(text).toLocaleString(), // Định dạng thời gian
+            align: 'center',
+            sorter: true,
+            render: (text) => {
+                const date = new Date(text);
+                const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+                return formattedDate;
+            },
         },
     ];
 
     return (
         <div>
-
-            {/* Ô nhập cho exactTime */}
             <Input
                 placeholder="Enter exact time (YYYY/MM/DD HH:mm:ss)"
                 value={exactTime}
-                onChange={handleExactTimeChange} // Xử lý khi người dùng nhập exactTime
+                onChange={handleExactTimeChange}
                 style={{ width: '100%', margin: '10px 0' }}
             />
-
-            {/* Row và Col để hiển thị 2 ô song song */}
             <Row gutter={16} style={{ marginBottom: '10px' }}>
                 <Col span={12}>
-                    {/* Ô chọn loại cảm biến */}
                     <Select
                         defaultValue="ALL"
                         style={{ width: '100%' }}
-                        onChange={handleTypeChange} // Xử lý khi chọn loại cảm biến
+                        onChange={handleTypeChange}
                     >
                         <Option value="ALL">Tất cả</Option>
                         <Option value="Humidity">Độ ẩm</Option>
                         <Option value="Light">Ánh sáng</Option>
                         <Option value="Temperature">Nhiệt độ</Option>
-                        <Option value="WindSpeed">Sức gió</Option> {/* Added Wind Speed as option */}
+                        <Option value="WindSpeed">Sức gió</Option>
                     </Select>
                 </Col>
                 <Col span={12}>
-                    {/* Ô nhập giá trị chính xác */}
                     <Input
                         placeholder="Enter exact value"
                         value={exactValue}
-                        onChange={handleExactValueChange} // Xử lý khi người dùng nhập giá trị chính xác
+                        onChange={handleExactValueChange}
                         style={{ width: '100%' }}
-                        disabled={type === 'ALL'} // Vô hiệu hóa nếu chọn ALL
+                        disabled={type === 'ALL'}
                     />
                 </Col>
             </Row>
 
             <Spin spinning={loading}>
-                {/* Hiển thị bảng dữ liệu từ API */}
                 <Table
-                    columns={columns} // Định nghĩa cột cho bảng
-                    dataSource={data} // Dữ liệu từ API
-                    rowKey="_id" // Định danh từng bản ghi với khóa _id
-                    pagination={false} // Sử dụng phân trang custom phía dưới
-                    onChange={handleTableChange} // Gọi khi người dùng thay đổi thứ tự sắp xếp
+                    columns={columns}
+                    dataSource={data}
+                    rowKey="_id"
+                    pagination={false}
+                    onChange={handleTableChange}
                 />
-
-                {/* Phân trang */}
                 <Pagination
                     current={currentPage}
-                    total={totalRecords} // Tổng số bản ghi từ API
-                    showSizeChanger // Hiển thị bộ chọn số lượng mục hiển thị trên mỗi trang
-                    onShowSizeChange={handlePageChange} // Xử lý khi số lượng mục/page thay đổi
-                    onChange={handlePageChange} // Xử lý khi thay đổi trang
-                    pageSize={pageSize} // Số lượng item hiển thị trên mỗi trang
-                    pageSizeOptions={['10', '20', '50']} // Các tùy chọn cho số lượng item mỗi trang
+                    total={totalRecords}
+                    showSizeChanger
+                    onShowSizeChange={handlePageChange}
+                    onChange={handlePageChange}
+                    pageSize={pageSize}
+                    pageSizeOptions={['10', '20', '50']}
                 />
             </Spin>
         </div>
     );
 }
 
-export default EpicKien; // Changed component name to EpicKien
+export default EpicKien;

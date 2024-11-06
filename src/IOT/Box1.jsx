@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import LightModeIcon from '@mui/icons-material/LightMode'; // Icon cho thiết bị 1
 import AcUnitIcon from '@mui/icons-material/AcUnit'; // Icon cho thiết bị 2
 import LightbulbIcon from '@mui/icons-material/Lightbulb'; // Icon cho thiết bị 3
+import AirIcon from '@mui/icons-material/Air'; // Icon cho thiết bị cảnh báo gió
 import axios from 'axios';
 import './lightpub.css'; // Import file CSS chứa hiệu ứng
 
@@ -14,11 +15,11 @@ function Box1(props) {
 
   const getInitialSwitchStates = () => {
     const storedState = localStorage.getItem('switchStates');
-    return storedState ? JSON.parse(storedState) : { switch1: 0, switch2: 0, switch3: 0 };
+    return storedState ? JSON.parse(storedState) : { switch1: 0, switch2: 0, switch3: 0, switch4: 0 };
   };
 
   const [switchStates, setSwitchStates] = useState(getInitialSwitchStates);
-  const [loading, setLoading] = useState({ switch1: false, switch2: false, switch3: false });
+  const [loading, setLoading] = useState({ switch1: false, switch2: false, switch3: false, switch4: false });
 
   useEffect(() => {
     localStorage.setItem('switchStates', JSON.stringify(switchStates));
@@ -199,6 +200,45 @@ function Box1(props) {
         </Box>
       </Box>
 
+      {/* TB4 - Cảnh báo gió */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        borderBottom={`4px solid ${colors.primary[500]}`}
+        p="15px"
+      >
+        <Box>
+          <Typography
+            color={colors.greenAccent[500]}
+            variant="h5"
+            fontWeight="600"
+          >
+            Cbao gió
+          </Typography>
+        </Box>
+        <Spin spinning={loading.switch4}>
+          <Box color={colors.grey[100]}>
+            {switchStates.switch4 === 1 ? (
+              <AirIcon
+                className={switchStates.switch4 === 1 ? 'bouncing' : ''}
+                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              />
+            ) : (
+              <AirIcon sx={{ color: colors.redAccent[600], fontSize: "26px" }} />
+            )}
+          </Box>
+        </Spin>
+        <Box
+          backgroundColor={switchStates.switch4 === 1 ? colors.redAccent[500] : colors.greenAccent[500]}
+          p="5px 10px"
+          borderRadius="4px"
+          onClick={handleToggle('switch4')}
+          style={{ cursor: 'pointer' }}
+        >
+          {switchStates.switch4 === 1 ? 'Tắt' : 'Bật'}
+        </Box>
+      </Box>
     </div>
   );
 }

@@ -74,8 +74,6 @@ const Dashboard = () => {
   
   return (
     <Box m="20px">
-      
-
       {/* GRID & CHARTS */}
       <Box
         display="grid"
@@ -86,14 +84,16 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          style={{ background: 'linear-gradient(120deg, #74ebd5, #acb6e5)' }}
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
           <StatBox
             title={sensorData.temperature !== null ? `${sensorData.temperature}°C` : "N/A"}
+            subtitleSx={{ color: colors.primary[400] }}
             subtitle="Nhiệt độ"
+            
             progress={sensorData.temperature/60}
             increase={sensorData.temperature !== null ? getTemperatureStatus(sensorData.temperature) : "N/A"}
             icon={
@@ -105,7 +105,7 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          style={{ background: 'linear-gradient(120deg, #74ebd5, #acb6e5)' }}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -124,7 +124,7 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          style={{ background: 'linear-gradient(120deg, #74ebd5, #acb6e5)' }}
           display="flex"
           alignItems="center"
           justifyContent="center"

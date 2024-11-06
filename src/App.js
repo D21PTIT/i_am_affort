@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Route, Routes, Link } from 'react-router-dom';
 
@@ -12,12 +12,27 @@ import {  useMode } from './IOT/theme';
 import EpicKien from './NewRequest/EpicKien';
 import RareKien from './NewRequest/RareKien';
 import Contact from './components/Contact';
+import io from 'socket.io-client';
+import AntdTest from './NewRequest/AntdTest';
+const socket = io('http://localhost:8080/3');
 
 const { Header, Content, Footer } = Layout;
 
 const App = () => {
   const [theme, colorMode] = useMode();
+  const [warningCount, setWarningCount] = useState(0);
+  useEffect(() => {
+    // Kết nối socket và lắng nghe sự kiện `countWarning`
+    socket.on('countWarning', (data) => {
+        setWarningCount(data.count1);
+        console.log(data);
+    });
 
+    // Cleanup khi component unmount để tránh lắng nghe sự kiện nhiều lần
+    return () => {
+        socket.off('countWarning');
+    };
+}, []);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -28,32 +43,35 @@ const App = () => {
               <Link to="/">Trang Chủ</Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link to="/static1">Data table 1</Link>
+              <Link to="/static1">Dữ liệu cảm biến</Link>
             </Menu.Item>
             <Menu.Item key="3">
-              <Link to="/static2">Data table 2</Link>
+              <Link to="/static2">Lịch sử bật tắt</Link>
             </Menu.Item>
             <Menu.Item key="4">
-              <Link to="/contact">Contact</Link>
+              <Link to="/contact">Liên Hệ</Link>
+            </Menu.Item>
+            <Menu.Item key="5">
+              <Link to="/cc">Số lượng cảnh báo: {warningCount}</Link>
             </Menu.Item>
             {/* <Menu.Item key="5">
               <Link to="/Test">Test</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="6">
               <Link to="/dp">DP</Link>
-            </Menu.Item> */}
+            </Menu.Item> 
           </Menu>
         </Header>
-
         <Content style={{ margin: '16px' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <Routes>
               <Route path="/" element={<RareKien />} />
-              <Route path="/static1" element={<MegaKien />} />
+              <Route path="/static1" element={<EpicKien></EpicKien>} />
               <Route path="/static2" element={<SupperKien />} />
               <Route path="/contact" element={<Contact/>} />
-              {/* <Route path="/Test" element={<RealTime />} />
-              <Route path="/dp" element={<Dashboard />} /> */}
+              {/* {/* <Route path="/Test" element={<RealTime />} /> */}
+              <Route path="/dp" element={<AntdTest />} /> 
+              {/* <RareKien /> */}
             </Routes>
           </div>
         </Content>

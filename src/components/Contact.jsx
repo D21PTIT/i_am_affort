@@ -31,7 +31,15 @@ const Contact = () => {
           GitHub: D21PTIT
         </a>
       </div>
-      <h2>API doc in here</h2>
+      <h2>
+        <a
+          href="https://docs.google.com/document/d/10A50mMzJC6e3wrx_9GsTeMvXIrOiySX38wWoSCh0MTs/edit?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          API doc is here
+        </a>
+      </h2>
     </div>
   );
 };

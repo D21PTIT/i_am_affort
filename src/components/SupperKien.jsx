@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pagination, Spin, Table, Select } from 'antd';
+import { Pagination, Spin, Table, Select, Input } from 'antd';
 import axios from 'axios';
 
 function SupperKien(props) {
@@ -10,6 +10,7 @@ function SupperKien(props) {
     const [loading, setLoading] = useState(false); // Trạng thái loading
     const [selectedTag, setSelectedTag] = useState("all"); // State cho tag
     const [timesort, setTimesort] = useState(false); // Mặc định sắp xếp tăng dần (cũ nhất trước)
+    const [exactTime, setExactTime] = useState(''); // State cho exactTime
 
     // Hàm gọi API
     const fetchDevices = async () => {
@@ -21,6 +22,7 @@ function SupperKien(props) {
                     type: selectedTag, // Lọc theo tag được chọn
                     quanty: pageSize,    // Số lượng bản ghi mỗi trang
                     timesort: timesort, // Sắp xếp theo thời gian (true: mới nhất, false: cũ nhất)
+                    exactTime: exactTime || null // Truyền exactTime nếu có giá trị
                 },
             });
 
@@ -34,10 +36,10 @@ function SupperKien(props) {
         }
     };
 
-    // Gọi lại API mỗi khi pageSize, currentPage, selectedTag, hoặc timesort thay đổi
+    // Gọi lại API mỗi khi pageSize, currentPage, selectedTag, timesort, hoặc exactTime thay đổi
     useEffect(() => {
         fetchDevices();
-    }, [pageSize, currentPage, selectedTag, timesort]);
+    }, [pageSize, currentPage, selectedTag, timesort, exactTime]);
 
     // Xử lý khi thay đổi số lượng item trên mỗi trang hoặc trang hiện tại
     const handlePageChange = (page, size) => {
@@ -49,6 +51,12 @@ function SupperKien(props) {
     const handleTagChange = (value) => {
         setSelectedTag(value);
         setCurrentPage(1); // Đặt lại trang về 1 mỗi khi thay đổi tag
+    };
+
+    // Xử lý khi thay đổi exactTime
+    const handleExactTimeChange = (e) => {
+        setExactTime(e.target.value);
+        setCurrentPage(1); // Đặt lại trang về 1 khi thay đổi exactTime
     };
 
     // Xử lý khi sắp xếp cột "Created At"
@@ -66,29 +74,27 @@ function SupperKien(props) {
             align: 'center', // Căn giữa cột
         },
         {
-            title: 'Tag',
-            dataIndex: 'tag',
-            key: 'tag',
-            align: 'center', // Căn giữa cột
-        },
-        {
-            title: 'Name',
+            title: 'Tên thiết bị',
             dataIndex: 'name',
             key: 'name',
             align: 'center', // Căn giữa cột
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             align: 'center', // Căn giữa cột
         },
         {
-            title: 'Created At',
+            title: 'Thời gian ghi nhận',
             dataIndex: 'createdAt',
             key: 'createdAt',
             sorter: true, // Bật tính năng sắp xếp cho cột
-            render: (text) => new Date(text).toLocaleString(), // Định dạng lại ngày tháng
+            render: (text) => {
+                const date = new Date(text);
+                const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+                return formattedDate;
+            }, // Định dạng lại ngày tháng
             onHeaderCell: () => ({
                 onClick: handleSortChange, // Xử lý khi người dùng nhấn vào tiêu đề cột
             }),
@@ -98,6 +104,14 @@ function SupperKien(props) {
 
     return (
         <div>
+            {/* Ô nhập để chọn exactTime */}
+            <Input
+                placeholder="Nhập exact time (YYYY/MM/DD HH:mm:ss)"
+                value={exactTime}
+                onChange={handleExactTimeChange} // Gọi khi người dùng nhập exactTime
+                style={{ width: '100%', marginBottom: 20 }}
+            />
+            
             {/* Select để chọn tag */}
             <Select
                 defaultValue="Tất cả"
@@ -108,6 +122,7 @@ function SupperKien(props) {
                     { value: "1", label: "Quạt" },
                     { value: "2", label: "Điều hòa" },
                     { value: "3", label: "Bóng đèn" },
+                    { value: "4", label: "Cảnh báo gió" }
                 ]}
             />
             
@@ -120,7 +135,6 @@ function SupperKien(props) {
                     rowKey="_id" // Sử dụng _id làm key cho mỗi hàng
                 />
                 <Pagination
-                    Pagination align="end"
                     current={currentPage}
                     total={totalRecords} // Tổng số bản ghi từ state
                     showSizeChanger // Hiển thị bộ chọn số lượng mục hiển thị trên mỗi trang

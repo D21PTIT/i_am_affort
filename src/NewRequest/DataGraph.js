@@ -9,27 +9,55 @@ const DataGraph = () => {
     {
       id: "Nhiệt độ",
       color: tokens("dark").greenAccent[500],
-      data: [{ x: "0", y: 0 }],
+      data: [],
     },
     {
       id: "Độ ẩm",
       color: tokens("dark").blueAccent[300],
-      data: [{ x: "0", y: 0 }],
+      data: [],
     },
     {
       id: "Sức gió",
       color: tokens("dark").grey[500],
-      data: [{ x: "0", y: 0 }],
+      data: [],
     },
     {
       id: "Ánh sáng",
       color: tokens("dark").redAccent[200],
-      data: [{ x: "0", y: 0 }],
-    }
-    
+      data: [],
+    },
   ]);
 
   useEffect(() => {
+    // Lấy 10 giá trị đầu tiên từ API khi component mount
+    const fetchInitialData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/get10value");
+        const initialData = await response.json();
+        initialData.reverse();
+
+        setData((prevData) => {
+          const updatedData = [...prevData];
+
+          initialData.forEach((item, index) => {
+            const currentTime = new Date(item.createdAt).toLocaleTimeString();
+
+            updatedData[0].data.push({ x: currentTime, y: item.temperature }); // Nhiệt độ
+            updatedData[1].data.push({ x: currentTime, y: item.humidity });    // Độ ẩm
+            updatedData[2].data.push({ x: currentTime, y: item.wind });        // Sức gió
+            updatedData[3].data.push({ x: currentTime, y: item.light });       // Ánh sáng
+          });
+
+          return updatedData;
+        });
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu ban đầu:", error);
+      }
+    };
+
+    fetchInitialData();
+
+    // Kết nối với socket để nhận dữ liệu mới
     socket.on("sensorData", (newData) => {
       if (newData && newData.temperature && newData.humidity && newData.light && newData.wind) {
         const currentTime = new Date().toLocaleTimeString();
@@ -54,13 +82,14 @@ const DataGraph = () => {
           // Cập nhật ánh sáng
           const lightData = updatedData.find((item) => item.id === "Ánh sáng");
           if (lightData) {
-            lightData.data.push({ x: currentTime, y: (newData.light) });
+            lightData.data.push({ x: currentTime, y: newData.light });
             if (lightData.data.length > 10) lightData.data.shift();
           }
 
+          // Cập nhật sức gió
           const windData = updatedData.find((item) => item.id === "Sức gió");
           if (windData) {
-            windData.data.push({ x: currentTime, y: (newData.wind) });
+            windData.data.push({ x: currentTime, y: newData.wind });
             if (windData.data.length > 10) windData.data.shift();
           }
 
