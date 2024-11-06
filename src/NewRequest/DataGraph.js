@@ -29,10 +29,9 @@ const DataGraph = () => {
   ]);
 
   useEffect(() => {
-    // Lấy 10 giá trị đầu tiên từ API khi component mount
     const fetchInitialData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/get10value");
+        const response = await fetch("http://localhost:8080/get20value");
         const initialData = await response.json();
         initialData.reverse();
 

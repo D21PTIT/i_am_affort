@@ -51,15 +51,16 @@ const App = () => {
             <Menu.Item key="4">
               <Link to="/contact">Liên Hệ</Link>
             </Menu.Item>
-            <Menu.Item key="5">
-              <Link to="/cc">Số lượng cảnh báo: {warningCount}</Link>
-            </Menu.Item>
+            
             {/* <Menu.Item key="5">
               <Link to="/Test">Test</Link>
             </Menu.Item> */}
             <Menu.Item key="6">
-              <Link to="/dp">DP</Link>
+              <Link to="/bai5">Bai5</Link>
             </Menu.Item> 
+            <Menu.Item key="5">
+              <Link to="/cc">Số lượng cảnh báo: {warningCount}</Link>
+            </Menu.Item>
           </Menu>
         </Header>
         <Content style={{ margin: '16px' }}>
@@ -70,7 +71,7 @@ const App = () => {
               <Route path="/static2" element={<SupperKien />} />
               <Route path="/contact" element={<Contact/>} />
               {/* {/* <Route path="/Test" element={<RealTime />} /> */}
-              <Route path="/dp" element={<AntdTest />} /> 
+              <Route path="/bai5" element={<Dashboard />} /> 
               {/* <RareKien /> */}
             </Routes>
           </div>
