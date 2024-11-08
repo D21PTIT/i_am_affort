@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+# Hệ thống IoT thu thập cảm biến và điều khiển thiết bị
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dự án này được tạo ra với [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Mô tả
+Phát triển hệ thống IoT thu thập dữ liệu từ các cảm biến và điều khiển thiết bị từ xa, tích hợp chức năng cảnh báo khi xuất hiện sự cố hoặc các giá trị vượt ngưỡng cho phép.
 
-In the project directory, you can run:
+- **Công nghệ sử dụng:**
+  - **Frontend**: JavaScript, ReactJS, Ant Design (antd).
+  - **Backend**: NodeJS, ExpressJS, MongoDB.
+  - **Giao thức và giao tiếp**: HTTP, MQTT, Socket.io.
 
-### `npm start`
+## Cài đặt
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Yêu cầu hệ thống
+- **Node.js** phiên bản 14+.
+- **MongoDB** để lưu trữ dữ liệu cảm biến và thông tin thiết bị.
+- **MQTT Broker** (Mosquitto hoặc EMQX) để giao tiếp thời gian thực.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+##Cài đặt các gói cần thiết:
 
-### `npm test`
+bash
+Copy code
+npm install
+##Thiết lập biến môi trường: Tạo file .env trong thư mục gốc của dự án với các thông tin sau:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+MONGODB_URI=<đường-dẫn-kết-nối-mongodb>
+MQTT_BROKER_URL=<địa-chỉ-mqtt-broker>
+Chạy ứng dụng:
 
-### `npm run build`
+##Chức năng chính
+1. Thu thập dữ liệu cảm biến
+Thu thập thông tin từ các cảm biến như nhiệt độ, độ ẩm, ánh sáng và lưu trữ vào MongoDB để dễ dàng theo dõi.
+2. Điều khiển thiết bị từ xa
+Cho phép người dùng điều khiển thiết bị (quạt, đèn, hệ thống tưới nước, v.v.) qua giao diện ReactJS hoặc các ứng dụng di động tích hợp MQTT.
+3. Cảnh báo và thông báo
+Thiết lập ngưỡng an toàn cho từng loại cảm biến. Khi giá trị vượt ngưỡng, hệ thống sẽ tự động gửi cảnh báo qua giao diện web hoặc gửi thông báo qua email/SMS.
+4. Giao diện người dùng
+Ant Design (antd): Sử dụng các thành phần UI của Ant Design để xây dựng giao diện thân thiện và dễ sử dụng.
+Hiển thị biểu đồ dữ liệu cảm biến theo thời gian thực, sử dụng Charts.js để biểu diễn trực quan.
+Kiến trúc hệ thống
+Frontend: Sử dụng ReactJS cho giao diện người dùng, tích hợp với Ant Design để tối ưu trải nghiệm.
+Backend: Node.js và ExpressJS để xây dựng API phục vụ giao tiếp giữa frontend và cơ sở dữ liệu MongoDB.
+MQTT và Socket.io: Cung cấp khả năng giao tiếp thời gian thực giữa thiết bị IoT và hệ thống.
+Các lệnh hữu ích
+Cài đặt các gói phụ thuộc:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+bash
+Copy code
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Chạy ứng dụng từ build:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+bash
+Copy code
+npm start
+##Đóng góp
+Nếu bạn muốn đóng góp cho dự án, vui lòng fork repository này và gửi pull request với các thay đổi của bạn. Chúng tôi khuyến khích các ý tưởng mới và đóng góp từ cộng đồng để cải thiện hệ thống IoT này.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
